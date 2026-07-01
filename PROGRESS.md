@@ -34,10 +34,9 @@ Branch naming mirrors the phase, e.g. `feat/scaffold`, `feat/users-slice`,
 - [x] Lock API/DTO contract (`API_CONTRACT.md`)
 
 ## Phase 2: Scaffold
-- [ ] `server/`: Spring Boot project generated, builds and runs locally
-- [ ] `client/`: Angular project generated, builds and serves locally
-- [ ] Postgres running locally, backend connects successfully
-- [ ] Commit: "chore: scaffold backend and frontend projects"
+- [x] `server/`: Spring Boot project generated, builds and runs locally
+- [x] `client/`: Angular project generated, builds and serves locally
+- [x] Postgres running locally, backend connects successfully
 
 ## Phase 3: Database
 - [ ] Flyway `V1__init.sql`: users, posts tables (UUID PKs, created_at/updated_at)
