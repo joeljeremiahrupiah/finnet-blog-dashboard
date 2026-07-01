@@ -39,9 +39,8 @@ Branch naming mirrors the phase, e.g. `feat/scaffold`, `feat/users-slice`,
 - [x] Postgres running locally, backend connects successfully
 
 ## Phase 3: Database
-- [ ] Flyway `V1__init.sql`: users, posts tables (UUID PKs, created_at/updated_at)
-- [ ] Flyway `V2__seed.sql`: 5 users, 3+ posts each
-- [ ] Commit: "feat: add database schema and seed data"
+- [x] Flyway `V1__init.sql`: users, posts tables (UUID PKs, created_at/updated_at)
+- [x] Flyway `V2__seed.sql`: 5 users, 3+ posts each
 
 ## Phase 4: Users slice
 - [ ] Backend: entity, repository, DTO, `GET /api/users`, `GET /api/users/:id`
