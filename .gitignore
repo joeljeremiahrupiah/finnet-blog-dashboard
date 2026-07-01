@@ -1,0 +1,17 @@
+# Java / Spring
+server/target/
+server/.mvn/
+*.class
+
+# Angular
+client/node_modules/
+client/dist/
+client/.angular/
+
+# Env
+.env
+*.env.local
+
+# OS
+.DS_Store
+EOF
