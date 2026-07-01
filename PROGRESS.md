@@ -2,6 +2,27 @@
 
 Working checklist for the build.
 
+## Git Workflow Convention
+
+One short-lived branch per phase below, merged back into `main` via a (self-reviewed) Pull Request:
+
+```bash
+git checkout main
+git pull
+git checkout -b feat/<phase-name>
+# work, commit incrementally as sub-steps within the phase are completed
+git push -u origin feat/<phase-name>
+# open a PR on GitHub, add a short description of what/why, merge it
+git checkout main
+git pull
+git branch -d feat/<phase-name>
+```
+
+Branch naming mirrors the phase, e.g. `feat/scaffold`, `feat/users-slice`,
+`feat/posts-feed-slice`, `feat/create-post-slice`, `feat/live-updates`,
+`chore/dockerize`, `fix/accessibility-responsive`, `style/polish`,
+`chore/deployment`, `docs/finalize-readme`.
+
 ## Phase 1: Planning
 - [x] Read and understand the assessment brief
 - [x] Decide tech stack (Spring Boot, Angular, PostgreSQL, Docker)
