@@ -1,0 +1,31 @@
+<section class="post-feed" aria-label="Posts">
+    @if (postService.loading()) {
+    <ul class="post-feed__skeleton" aria-hidden="true">
+        @for (i of [1,2,3]; track i) {
+        <li class="skeleton-row skeleton-row--tall"></li>
+        }
+    </ul>
+    } @else if (postService.error()) {
+    <div class="post-feed__error" role="alert">
+        <p>{{ postService.error() }}</p>
+        <button type="button" (click)="retry()">Retry</button>
+    </div>
+    } @else if (postService.posts().length === 0) {
+    <p class="post-feed__empty">This user hasn't posted anything yet.</p>
+    } @else {
+    <ul class="post-feed__list">
+        @for (post of postService.posts(); track post.id) {
+        <li class="post-feed__item">
+            <button type="button" class="post-feed__toggle" [attr.aria-expanded]="isExpanded(post.id)"
+                (click)="toggleExpand(post.id)">
+                <h3>{{ post.title }}</h3>
+                <span class="post-feed__chevron" [class.post-feed__chevron--open]="isExpanded(post.id)">›</span>
+            </button>
+            <div class="post-feed__body" [class.post-feed__body--expanded]="isExpanded(post.id)">
+                <p>{{ post.body }}</p>
+            </div>
+        </li>
+        }
+    </ul>
+    }
+</section>
