@@ -42,6 +42,12 @@ export class PostService {
       .subscribe();
   }
 
+  createPost(userId: string, title: string, body: string) {
+    return this.http
+      .post<Post>(`${this.baseUrl}/users/${userId}/posts`, { title, body })
+      .pipe(tap((post) => this.prependPost(post)));
+  }
+
   retry(): void {
     if (this.lastUserId) {
       this.loadPosts(this.lastUserId);
