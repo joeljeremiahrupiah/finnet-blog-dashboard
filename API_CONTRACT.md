@@ -44,7 +44,7 @@ Base path: `/api`
 ```
 
 ### `GET /api/users/:userId/posts`
-- 200 → `Post[]` (sorted `createdAt` descending — newest first)
+- 200 → `Post[]` (sorted `createdAt` descending, newest first)
 - 404 → `ApiError` (unknown userId)
 
 ### `POST /api/users/:userId/posts`
@@ -62,6 +62,9 @@ Request body:
 ---
 
 ## Error Shapes
+
+**Policy: error messages never include the identifier that was looked up.**
+A missing user always returns the message `"User not found"`, never `"User with id <uuid> not found"`. This avoids leaking internal identifiers into client-side logs, browser dev tools, or error trackers. Every error response below is produced centrally by a single `GlobalExceptionHandler`, individual endpoints never construct error bodies themselves.
 
 ### `ApiError`: general errors (404, 500, etc.)
 ```json
@@ -112,3 +115,4 @@ Otherwise ignore (or optionally show a lightweight "new post" indicator, not req
 - All IDs: UUID strings.
 - JSON field naming: `camelCase` on the wire (Java `snake_case`/DB columns are mapped to camelCase in DTOs, never expose raw entity/column names).
 - CORS: backend allows the frontend's origin(s) for local dev and the deployed Vercel URL in production.
+- **Interactive docs:** every endpoint in this contract is also explorable and testable live via Swagger UI at `/swagger-ui.html` once the backend is running (raw OpenAPI spec at `/v3/api-docs`).

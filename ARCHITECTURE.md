@@ -47,6 +47,30 @@ The trade-off: `ApplicationEventPublisher` only works within a single JVM. If th
 
 `@TransactionalEventListener(phase = AFTER_COMMIT)` is used rather than a plain `@EventListener`, so that the live-update broadcast only fires after the database transaction has actually committed, avoiding a race where a client is notified of a post that isn't durably saved yet.
 
+### Why a custom exception hierarchy instead of throwing built-in exceptions?
+
+Throwing bare `RuntimeException` or `IllegalArgumentException` directly from business logic is avoided throughout this codebase (and is flagged by static analysis tools such as Codacy) because those types carry no domain meaning. A caller catching `RuntimeException` learns nothing about what actually went wrong. Instead, every exception extends a single `ApplicationException` base class that pairs a message with the HTTP status it should produce (e.g. `ResourceNotFoundException` → 404). `GlobalExceptionHandler` (`@RestControllerAdvice`) catches this base type once, in one place, and translates it into a consistent `ErrorResponse`. Individual controllers and services never construct HTTP responses or know about status codes themselves.
+
+A second, deliberate rule: **exception messages never include the identifier that was looked up.** A message like `"User with id 550e8400-... was not found"` leaks internal identifiers into logs, browser dev tools, and error trackers for no benefit to the caller, who already knows which ID it sent. `ResourceNotFoundException` instead exposes fixed factory methods (`ResourceNotFoundException.user()`, `.post()`) that return a generic message such as `"User not found"`. When the actual ID is useful for debugging, it is logged via SLF4J at the point of failure, server-side only, never in the response body.
+
+`GlobalExceptionHandler` also has a final catch-all for any unanticipated `Exception`: the real exception (with full stack trace) is logged in full on the server, but the client only ever receives a generic `"An unexpected error occurred"` message. Internal implementation details are never leaked over the API.
+
+### Why Lombok?
+
+Lombok removes constructor/getter/setter boilerplate via annotations. It is used selectively, not blanket-applied:
+
+- Entities use `@Getter`/`@Setter`/`@NoArgsConstructor`/`@AllArgsConstructor`/`@Builder`, but deliberately **not** `@Data`. `@Data` generates `equals()`/`hashCode()` from every field, which is unsafe on JPA entities (it can trigger unwanted lazy-loading and produces an inconsistent contract once an entity is persisted and its ID is assigned).
+- Service classes use `@RequiredArgsConstructor` for constructor injection of `final` dependency fields, and `@Slf4j` for a ready-made logger, both standard, low-risk uses.
+- DTOs are plain Java `record`s, not Lombok classes, since DTOs should be immutable, behavior-free value objects, exactly what a record already is, with no annotation needed.
+
+### Why MapStruct?
+
+Entity to DTO mapping is handled by MapStruct rather than hand-written mapper methods or a reflection-based library (e.g. ModelMapper). MapStruct generates the mapping implementation at **compile time**, there is no runtime reflection cost, and critically, the build fails immediately if a field cannot be mapped, rather than silently producing a `null` discovered only later at runtime. This is the standard choice in most enterprise Spring Boot codebases once a project has more than one or two DTOs to maintain.
+
+### Why springdoc-openapi (Swagger UI)?
+
+The API is self-documenting via `springdoc-openapi`, which generates an OpenAPI 3 spec from controller annotations and serves an interactive Swagger UI at `/swagger-ui.html`. This gives reviewers (and future developers) a way to explore and test every endpoint directly in the browser. No Postman collection or curl commands required to verify the API works as documented.
+
 ### Why Flyway migrations instead of `ddl-auto: update`?
 
 `ddl-auto` is convenient for a throwaway prototype but risky in a real system, it can silently alter or drop columns based on entity changes. Flyway migrations are explicit, versioned, and reviewable in a diff, this is what a real team would use, and using it here is a deliberate signal of production habits rather than prototype habits.
@@ -89,7 +113,7 @@ INDEX idx_posts_user_id ON posts(user_id)
 - `ON DELETE CASCADE`: deleting a user removes their posts automatically, no orphaned rows, no application-level cleanup code required.
 - Index on `posts.user_id`: every posts query filters by this column (`GET /api/users/:userId/posts`), without it, this becomes a full table scan as data grows.
 - `email UNIQUE`: a reasonable real-world constraint beyond the minimum spec, showing attention to data integrity.
-- Feed ordering uses `created_at`, not ID,  UUIDs (unlike auto-increment integers) carry no inherent chronological ordering, so sorting posts newest-first must rely on the timestamp column.
+- Feed ordering uses `created_at`, not ID, UUIDs (unlike auto-increment integers) carry no inherent chronological ordering, so sorting posts newest-first must rely on the timestamp column.
 - Flat `company_name` / `address_*` columns instead of separate tables: a deliberate choice not to over-normalize. Nothing else in the system references "company" or "address" independently, so a join would add cost with no corresponding benefit at this scale.
 
 ---

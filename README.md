@@ -29,6 +29,9 @@ _(Structure will be filled in as each part is built.)_
 ## Tech Stack
 
 - **Backend:** Java, Spring Boot, PostgreSQL, Flyway
+- **Boilerplate reduction:** Lombok (used selectively never `@Data` on JPA entities; see `ARCHITECTURE.md`)
+- **Entity/DTO mapping:** MapStruct (compile-time generated)
+- **API documentation:** springdoc-openapi, interactive Swagger UI at `/swagger-ui.html` once the backend is running locally or deployed
 - **Frontend:** Angular (standalone components, signals)
 - **Live updates:** Spring `ApplicationEventPublisher` + Server-Sent Events
 - **Infra:** Docker, Docker Compose
