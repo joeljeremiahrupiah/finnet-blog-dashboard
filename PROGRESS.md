@@ -54,10 +54,9 @@ Branch naming mirrors the phase, e.g. `feat/scaffold`, `feat/users-slice`,
 - [x] Frontend: skeleton loader, empty state, retry mechanism (reusable pattern)
 
 ## Phase 6: Create post slice
-- [ ] Backend: `POST /api/users/:userId/posts`, validation, structured 400 errors
-- [ ] Frontend: reactive form, client + server validation display
-- [ ] Frontend: optimistic prepend to feed on success
-- [ ] Commit: "feat: create post"
+- [x] Backend: `POST /api/users/:userId/posts`, validation, structured 400 errors
+- [x] Frontend: reactive form, client + server validation display
+- [x] Frontend: optimistic prepend to feed on success
 
 ## Phase 7: Live updates
 - [ ] Backend: `PostCreatedEvent`, `@TransactionalEventListener(AFTER_COMMIT)`

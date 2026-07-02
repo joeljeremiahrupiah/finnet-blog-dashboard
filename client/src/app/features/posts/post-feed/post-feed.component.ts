@@ -19,6 +19,7 @@ export class PostFeedComponent {
         this.postService.loadPosts(id);
       }
     });
+    this.postService.connectLiveUpdates(() => this.userId());
   }
 
   toggleExpand(postId: string): void {

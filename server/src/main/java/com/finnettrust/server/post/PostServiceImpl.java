@@ -3,6 +3,7 @@ package com.finnettrust.server.post;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public List<PostDto> findByUserId(UUID userId) {
@@ -47,6 +49,8 @@ public class PostServiceImpl implements PostService {
                 .body(request.body())
                 .build();
         Post saved = postRepository.save(post);
-        return postMapper.toDto(saved);
+        PostDto dto = postMapper.toDto(saved);
+        eventPublisher.publishEvent(new PostCreatedEvent(dto));
+        return dto;
     }
 }

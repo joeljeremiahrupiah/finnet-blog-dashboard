@@ -18,6 +18,7 @@ export class PostService {
   readonly error = this._error.asReadonly();
 
   private lastUserId: string | null = null;
+  private eventSource: EventSource | null = null;
 
   constructor(private readonly http: HttpClient) {}
 
@@ -42,20 +43,41 @@ export class PostService {
       .subscribe();
   }
 
-  createPost(userId: string, title: string, body: string) {
-    return this.http
-      .post<Post>(`${this.baseUrl}/users/${userId}/posts`, { title, body })
-      .pipe(tap((post) => this.prependPost(post)));
-  }
-
   retry(): void {
     if (this.lastUserId) {
       this.loadPosts(this.lastUserId);
     }
   }
 
-  prependPost(post: Post): void {
-    this._posts.update((current) => [post, ...current]);
+  /**
+   * Sends the create request only does not insert the result into the feed directly.
+   */
+  createPost(userId: string, title: string, body: string) {
+    return this.http.post<Post>(`${this.baseUrl}/users/${userId}/posts`, { title, body });
+  }
+
+  // Prepends a post received via SSE, guarding against any duplicate event delivery.
+  private prependPost(post: Post): void {
+    this._posts.update((current) =>
+      current.some((p) => p.id === post.id) ? current : [post, ...current],
+    );
+  }
+
+  connectLiveUpdates(currentUserId: () => string | null): void {
+    if (this.eventSource) return;
+
+    this.eventSource = new EventSource(`${this.baseUrl}/live/posts`);
+    this.eventSource.addEventListener('post-created', (event: MessageEvent) => {
+      const post: Post = JSON.parse(event.data);
+      if (post.userId === currentUserId()) {
+        this.prependPost(post);
+      }
+    });
+  }
+
+  disconnectLiveUpdates(): void {
+    this.eventSource?.close();
+    this.eventSource = null;
   }
 
   private extractMessage(err: { error?: ApiError }): string {
