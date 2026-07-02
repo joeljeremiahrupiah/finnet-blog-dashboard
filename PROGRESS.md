@@ -45,9 +45,8 @@ Branch naming mirrors the phase, e.g. `feat/scaffold`, `feat/users-slice`,
 ## Phase 4: Users slice
 - [x] Backend: entity, repository, DTO, `GET /api/users`, `GET /api/users/:id`
 - [x] Backend: global exception handler skeleton
-- [ ] Frontend: `UserService`, user list/sidebar, user detail card
-- [ ] Frontend wired to real API, CORS confirmed working
-- [ ] Commit: "feat: user listing and detail"
+- [x] Frontend: `UserService`, user list/sidebar, user detail card
+- [x] Frontend wired to real API, CORS confirmed working
 
 ## Phase 5: Posts feed slice
 - [ ] Backend: `GET /api/users/:userId/posts`, 404 for unknown user

@@ -1,0 +1,104 @@
+.user-list {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0.5rem;
+
+    @media (min-width: 768px) {
+        width: 260px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 1rem;
+    }
+}
+
+.user-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+
+    @media (min-width: 768px) {
+        flex-direction: column;
+        overflow-x: visible;
+    }
+}
+
+.user-list__item {
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-sm);
+    font: inherit;
+    color: var(--color-text);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--transition-fast), color var(--transition-fast);
+
+    &:hover {
+        background: var(--color-surface);
+    }
+
+    &--active {
+        background: var(--color-navy);
+        color: white;
+
+        &:hover {
+            background: var(--color-navy);
+        }
+    }
+}
+
+.user-list__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.skeleton-row {
+    height: 2.5rem;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-border) 50%, var(--color-surface) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
+}
+
+.user-list__error {
+    padding: 1rem;
+    color: var(--color-error);
+
+    button {
+        margin-top: 0.5rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--color-error);
+        background: transparent;
+        color: var(--color-error);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: background var(--transition-fast);
+
+        &:hover {
+            background: var(--color-error);
+            color: white;
+        }
+    }
+}
+
+.user-list__empty {
+    padding: 1rem;
+    color: var(--color-text-secondary);
+}

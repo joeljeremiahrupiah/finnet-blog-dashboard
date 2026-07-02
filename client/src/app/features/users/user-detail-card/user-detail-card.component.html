@@ -1,0 +1,17 @@
+@if (user(); as u) {
+<section class="user-card" aria-labelledby="user-card-name">
+    <h2 id="user-card-name">{{ u.name }}</h2>
+    <dl>
+        <dt>Email</dt>
+        <dd><a [href]="'mailto:' + u.email">{{ u.email }}</a></dd>
+
+        <dt>Company</dt>
+        <dd>{{ u.companyName }}</dd>
+
+        <dt>Address</dt>
+        <dd>{{ u.addressStreet }}, {{ u.addressCity }}</dd>
+    </dl>
+</section>
+} @else {
+<p class="user-card__placeholder">Select a user to see their profile.</p>
+}
