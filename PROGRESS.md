@@ -59,17 +59,15 @@ Branch naming mirrors the phase, e.g. `feat/scaffold`, `feat/users-slice`,
 - [x] Frontend: optimistic prepend to feed on success
 
 ## Phase 7: Live updates
-- [ ] Backend: `PostCreatedEvent`, `@TransactionalEventListener(AFTER_COMMIT)`
-- [ ] Backend: SSE endpoint + emitter registry
-- [ ] Frontend: `EventSource` subscription, live prepend
-- [ ] Commit: "feat: live post updates via SSE"
+- [x] Backend: `PostCreatedEvent`, `@TransactionalEventListener(AFTER_COMMIT)`
+- [x] Backend: SSE endpoint + emitter registry
+- [x] Frontend: `EventSource` subscription, live prepend
 
 ## Phase 8: Dockerize
-- [ ] `server/Dockerfile` (multi-stage)
-- [ ] `client/Dockerfile` (multi-stage, nginx)
-- [ ] `docker-compose.yml` (postgres, backend, frontend, healthchecks)
-- [ ] Verified: `git clone` → `docker-compose up` → working app
-- [ ] Commit: "chore: dockerize backend, frontend, and database"
+- [x] `server/Dockerfile` (multi-stage)
+- [x] `client/Dockerfile` (multi-stage, nginx)
+- [x] `docker-compose.yml` (postgres, backend, frontend, healthchecks)
+- [x] Verified: `git clone` → `docker-compose up` → working app
 
 ## Phase 9: Accessibility & responsive pass
 - [ ] Semantic landmarks, `aria-expanded` on collapse toggles
