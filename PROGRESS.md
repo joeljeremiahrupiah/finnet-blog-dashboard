@@ -49,10 +49,9 @@ Branch naming mirrors the phase, e.g. `feat/scaffold`, `feat/users-slice`,
 - [x] Frontend wired to real API, CORS confirmed working
 
 ## Phase 5: Posts feed slice
-- [ ] Backend: `GET /api/users/:userId/posts`, 404 for unknown user
-- [ ] Frontend: feed component, expand/collapse
-- [ ] Frontend: skeleton loader, empty state, retry mechanism (reusable pattern)
-- [ ] Commit: "feat: posts feed with loading/error states"
+- [x] Backend: `GET /api/users/:userId/posts`, 404 for unknown user
+- [x] Frontend: feed component, expand/collapse
+- [x] Frontend: skeleton loader, empty state, retry mechanism (reusable pattern)
 
 ## Phase 6: Create post slice
 - [ ] Backend: `POST /api/users/:userId/posts`, validation, structured 400 errors

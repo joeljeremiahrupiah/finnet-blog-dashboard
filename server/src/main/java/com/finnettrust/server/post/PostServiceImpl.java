@@ -34,4 +34,19 @@ public class PostServiceImpl implements PostService {
                 .map(postMapper::toDto)
                 .toList();
     }
+
+    @Override
+    @Transactional
+    public PostDto create(UUID userId, CreatePostRequest request) {
+        if (!userRepository.existsById(userId)) {
+            throw ResourceNotFoundException.user();
+        }
+        Post post = Post.builder()
+                .userId(userId)
+                .title(request.title())
+                .body(request.body())
+                .build();
+        Post saved = postRepository.save(post);
+        return postMapper.toDto(saved);
+    }
 }
