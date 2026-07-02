@@ -43,8 +43,8 @@ Branch naming mirrors the phase, e.g. `feat/scaffold`, `feat/users-slice`,
 - [x] Flyway `V2__seed.sql`: 5 users, 3+ posts each
 
 ## Phase 4: Users slice
-- [ ] Backend: entity, repository, DTO, `GET /api/users`, `GET /api/users/:id`
-- [ ] Backend: global exception handler skeleton
+- [x] Backend: entity, repository, DTO, `GET /api/users`, `GET /api/users/:id`
+- [x] Backend: global exception handler skeleton
 - [ ] Frontend: `UserService`, user list/sidebar, user detail card
 - [ ] Frontend wired to real API, CORS confirmed working
 - [ ] Commit: "feat: user listing and detail"
