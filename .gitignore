@@ -1,6 +1,5 @@
 # Java / Spring
 server/target/
-server/.mvn/
 *.class
 
 # Angular
