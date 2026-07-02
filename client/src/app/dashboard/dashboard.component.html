@@ -1,4 +1,7 @@
 <div class="dashboard">
     <app-user-list (userSelected)="onUserSelected($event)"></app-user-list>
-    <app-user-detail-card [user]="selectedUser()"></app-user-detail-card>
+    <div class="dashboard-main">
+        <app-user-detail-card [user]="selectedUser()"></app-user-detail-card>
+        <app-post-feed [userId]="selectedUser()?.id ?? null"></app-post-feed>
+    </div>
 </div>
