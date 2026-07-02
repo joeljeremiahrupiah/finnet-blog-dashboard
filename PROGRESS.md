@@ -82,10 +82,10 @@ Branch naming mirrors the phase, e.g. `feat/scaffold`, `feat/users-slice`,
 - [ ] Commit: "style: micro-interactions and polish"
 
 ## Phase 11: Deploy
-- [ ] Backend deployed (Render): live URL working
-- [ ] Frontend deployed (Vercel): live URL working
-- [ ] Postgres provisioned on deploy platform
-- [ ] Commit (if config changes needed): "chore: deployment configuration"
+- [x] Backend deployed (Render): live URL working
+- [x] Frontend deployed (Vercel): live URL working
+- [x] Postgres provisioned on deploy platform
+- [x] Commit (if config changes needed): "chore: deployment configuration"
 
 ## Phase 12: Documentation
 - [ ] Fill in `README.md`: setup instructions (tested on clean clone)
@@ -95,4 +95,4 @@ Branch naming mirrors the phase, e.g. `feat/scaffold`, `feat/users-slice`,
 
 ## Phase 13: Submit
 - [ ] Add `hr@finnettrust.com` as collaborator (if repo is private)
-- [ ] Send submission email (subject: `Full-Stack Assessment Submission - [Name]`)
+- [ ] Send submission email (subject: `Full-Stack Assessment Submission`)

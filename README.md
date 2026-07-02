@@ -2,14 +2,23 @@
 
 A full-stack User Dashboard & Post Manager built as a technical assessment for Finnet Trust. Users can be browsed, their posts viewed in a live-updating feed, and new posts created all backed by a custom REST API.
 
-> See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full reasoning behind the
-> technology choices, database design, and scaling strategy.
+> See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full reasoning behind
+> the technology choices, database design, and scaling strategy, and
+> [`API_CONTRACT.md`](./API_CONTRACT.md) for the exact request/response
+> shapes.
 
 ---
 
-## Status
+## Live Demo
 
-Planning complete, implementation in progress.
+- **Frontend:** https://finnet-blog-dashboard.vercel.app
+- **Backend API:** https://finnet-blog-dashboard.onrender.com/api/users
+- **Swagger UI:** https://finnet-blog-dashboard.onrender.com/swagger-ui.html
+
+> Note: the backend is hosted on Render's free tier, which spins down after
+> a period of inactivity. The first request after idle time may take
+> 30–60 seconds to respond while the instance wakes up
+> subsequent requests are fast.
 
 ---
 
@@ -17,10 +26,34 @@ Planning complete, implementation in progress.
 
 ```
 finnet-blog-dashboard/
-  server/     Spring Boot backend (REST API, PostgreSQL, Flyway)
-  client/     Angular frontend
-  docker-compose.yml
-  ARCHITECTURE.md
+  server/                      Spring Boot backend
+    src/main/java/com/finnettrust/server/
+      common/
+        exception/             Custom exception hierarchy + global handler
+        config/                CORS, OpenAPI/Swagger configuration
+      user/                    Users module (entity, DTO, mapper, service, controller)
+      post/                    Posts module (entity, DTO, mapper, service, controller)
+      live/                    Live-update module (SSE broadcast)
+    src/main/resources/
+      application.yml
+      db/migration/            Flyway migrations (schema + seed data)
+    Dockerfile
+  client/                      Angular frontend
+    src/app/
+      core/
+        models/                TypeScript interfaces matching API_CONTRACT.md
+        services/              HTTP + signal-based state per feature
+        http/                  Retry interceptor
+      features/
+        users/                 User list, user detail card
+        posts/                 Post feed, create-post form
+      dashboard/               Top-level page composing everything together
+    Dockerfile
+    nginx.conf
+  docker-compose.yml           Full local stack: postgres + server + client
+  ARCHITECTURE.md              Design decisions, DB design, scaling strategy
+  API_CONTRACT.md              Exact API request/response shapes
+  PROGRESS.md                  Build order and phase-by-phase checklist
   README.md
 ```
 
@@ -39,23 +72,82 @@ _(Structure will be filled in as each part is built.)_
 
 ## Prerequisites & Setup
 
-_(To be completed once the backend and frontend are scaffolded.)_
+- Docker + Docker Compose (recommended, no other local setup needed)
+- **Or**, for running each side natively: Java 21, Maven (via included `./mvnw` wrapper), Node.js 22+, Angular CLI, PostgreSQL 18
+
+## Setup Docker (recommended)
+
+```bash
+git clone https://github.com/joeljeremiahrupiah/finnet-blog-dashboard.git
+cd finnet-blog-dashboard
+docker compose up --build
+```
+
+Then visit:
+
+- Frontend: http://localhost:4200
+- Backend API: http://localhost:8080/api/users
+- Swagger UI: http://localhost:8080/swagger-ui.html
+
+Database schema and seed data (5 users, 3 posts each) are applied automatically on first startup via Flyway, no manual steps needed.
+
+## Setup running locally without Docker
+
+**Database:**
+
+```bash
+docker run --name finnet-postgres \
+  -e POSTGRES_DB=finnet \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -p 5432:5432 \
+  -d postgres:18
+```
+
+(Or point `application.yaml`'s datasource env vars at any existing PostgreSQL 18 instance.)
+
+**Backend:**
+
+```bash
+cd server
+./mvnw spring-boot:run
+```
+
+**Frontend:**
+
+```bash
+cd client
+ng serve
+```
+
+Visit http://localhost:4200.
 
 ## Seed Data
 
-_(To be completed: 5 sample users, 3+ posts each, seeded via Flyway migration.)_
-
-## Live Demo
-
-_(To be added once deployed.)_
+5 users and 3 posts per user are seeded automatically via Flyway migration (`server/src/main/resources/db/migration/V2__seed.sql`) on first application startup, no manual script needs to be run.
 
 ## Design Decisions & Trade-offs
 
-See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full write-up. In short:
+Full write-up in [`ARCHITECTURE.md`](./ARCHITECTURE.md). In short:
 
-- **Modular monolith** over microservices right-sized for current scale, with module boundaries drawn where a future service split would occur.
-- **`ApplicationEventPublisher`** over Kafka for live-update events, same decoupling benefit without broker overhead, with a named upgrade path if the backend is ever horizontally scaled.
-- **Flyway migrations** over `ddl-auto` explicit, versioned schema changes.
+- **Modular monolith** over microservices: right-sized for current scale, with module boundaries (`user`, `post`, `live`, `common`) drawn exactly where a future service split would occur.
+- **`ApplicationEventPublisher`** over Kafka for live-update events: same decoupling benefit without broker overhead, with a named upgrade path (Kafka/Redis Pub/Sub) if the backend is ever horizontally scaled.
+- **Flyway migrations** over `ddl-auto`: explicit, versioned, reviewable schema changes.
+- **UUID primary keys** over auto-increment: avoids sequential ID leakage, safe for future distributed writes.
+- **Custom exception hierarchy:** no bare `RuntimeException`/`IllegalArgumentException` thrown anywhere; every exception extends `ApplicationException` and is handled centrally by `GlobalExceptionHandler`. Error messages never include looked-up IDs.
+- **MapStruct** for entity to DTO mapping: compile-time generated, no runtime reflection cost.
+- **Server-Sent Events**, not WebSockets, for live updates: the app only needs one-directional server→client push, so SSE is simpler with no extra client-side library needed.
+
+## Extra Features (beyond the core brief)
+
+- **Live post updates:** creating a post is broadcast in real time to every connected client via SSE, without any refresh or polling.
+- **Interactive API docs:** full Swagger UI for exploring and testing every endpoint directly in the browser.
+- **Centralized, ID-free error handling:** consistent error shapes across every endpoint, with internal identifiers never exposed to the client.
+
+## Known Limitations
+
+- Render's free tier spins the backend down after inactivity.
+- Live updates use `ApplicationEventPublisher`, which only works within a single backend instance, documented as a deliberate, scale-appropriate trade-off in `ARCHITECTURE.md`, with the upgrade path noted.
 
 ## Screenshots
 
