@@ -26,17 +26,52 @@ body {
     background: var(--color-surface);
 }
 
-@media (prefers-reduced-motion: reduce) {
+app-dashboard {
+    display: block;
+    width: 100%;
+}
 
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1rem;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+
+    @media (min-width: 1024px) {
+        display: grid !important;
+        grid-template-columns: 280px 1fr 340px !important;
+        align-items: flex-start;
+        padding: 2rem;
+        gap: 1.75rem;
     }
 }
 
-:focus-visible {
-    outline: 2px solid var(--color-green);
-    outline-offset: 2px;
+app-user-list,
+.dashboard-feed-zone,
+.dashboard-profile-zone {
+    min-width: 0; 
+    width: 100%;
+}
+
+app-create-post-form,
+app-post-feed,
+app-user-detail-card {
+    display: block;
+    width: 100%;
+}
+
+.dashboard-feed-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.dashboard-profile-zone {
+    @media (min-width: 1024px) {
+        position: sticky;
+        top: 2rem;
+    }
 }

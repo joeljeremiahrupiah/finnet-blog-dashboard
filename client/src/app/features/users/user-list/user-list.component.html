@@ -1,24 +1,27 @@
 <nav class="user-list" aria-label="Users">
     @if (userService.loading()) {
-    <ul class="user-list__skeleton" aria-hidden="true">
+    <ul class="user-list-skeleton" aria-hidden="true">
         @for (i of [1,2,3,4,5]; track i) {
         <li class="skeleton-row"></li>
         }
     </ul>
     } @else if (userService.error()) {
-    <div class="user-list__error" role="alert">
+    <div class="user-list-error" role="alert">
         <p>{{ userService.error() }}</p>
         <button type="button" (click)="retry()">Retry</button>
     </div>
     } @else if (userService.users().length === 0) {
-    <p class="user-list__empty">No users found.</p>
+    <p class="user-list-empty">No users found.</p>
     } @else {
     <ul>
         @for (user of userService.users(); track user.id) {
         <li>
-            <button type="button" class="user-list__item" [class.user-list__item--active]="selectedId() === user.id"
+            <button type="button" class="user-list-item" [class.user-list-item-active]="selectedId() === user.id"
                 [attr.aria-pressed]="selectedId() === user.id" (click)="selectUser(user)">
-                {{ user.name }}
+                <span class="user-list-avatar-initials" aria-hidden="true">
+                    {{ getInitials(user.name) }}
+                </span>
+                <span class="user-list-name">{{ user.name }}</span>
             </button>
         </li>
         }
