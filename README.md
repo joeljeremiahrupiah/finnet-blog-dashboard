@@ -71,10 +71,13 @@ finnet-blog-dashboard/
 
 ## Prerequisites & Setup
 
-- Docker + Docker Compose (recommended, no other local setup needed)
-- **Or**, for running each side natively: Java 21, Maven (via included `./mvnw` wrapper), Node.js 22+, Angular CLI, PostgreSQL 18
+**Recommended Docker path:** just Docker + Docker Compose. Nothing else needs to be installed on your machine, no Java, no Node, no Angular CLI, no Maven. The Dockerfiles handle all of that inside the containers.
+
+**Alternative running natively without Docker:** Java 21, Maven (or use the included `./mvnw` wrapper, no separate Maven install needed), Node.js 20.0.\*, the Angular CLI (`npm install -g @angular/cli`), and a local PostgreSQL 18 instance.
 
 ## Setup Docker (recommended)
+
+No local installs of Java, Node, Angular CLI, or Maven required, just Docker.
 
 ```bash
 git clone https://github.com/joeljeremiahrupiah/finnet-blog-dashboard.git
@@ -92,6 +95,8 @@ Database schema and seed data (5 users, 3 posts each) are applied automatically 
 
 ## Setup running locally without Docker
 
+Only needed if you don't want to use Docker. This path requires Java, Node.js and the Angular CLI installed globally on your machine (see Prerequisites above). The backend command below uses the bundled `./mvnw` wrapper so a separate Maven install isn't required, but `ng` (the Angular CLI) does need to be installed globally first via `npm install -g @angular/cli`.
+
 **Database:**
 
 ```bash
@@ -103,7 +108,7 @@ docker run --name finnet-postgres \
   -d postgres:18
 ```
 
-(Or point `application.yaml`'s datasource env vars at any existing PostgreSQL 18 instance.)
+(Or point `application.yml`'s datasource env vars at any existing PostgreSQL 18 instance.)
 
 **Backend:**
 
@@ -135,7 +140,7 @@ Full write-up in [`ARCHITECTURE.md`](./ARCHITECTURE.md). In short:
 - **UUID primary keys** over auto-increment: avoids sequential ID leakage, safe for future distributed writes.
 - **Custom exception hierarchy:** no bare `RuntimeException`/`IllegalArgumentException` thrown anywhere; every exception extends `ApplicationException` and is handled centrally by `GlobalExceptionHandler`. Error messages never include looked-up IDs.
 - **MapStruct** for entity to DTO mapping: compile-time generated, no runtime reflection cost.
-- **Server-Sent Events**, not WebSockets, for live updates: the app only needs one-directional server→client push, so SSE is simpler with no extra client-side library needed.
+- **Server-Sent Events**, not WebSockets, for live updates: the app only needs one-directional server to client push, so SSE is simpler with no extra client-side library needed.
 
 ## Extra Features (beyond the core brief)
 
