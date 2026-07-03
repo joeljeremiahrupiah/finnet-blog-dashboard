@@ -1,29 +1,50 @@
-<form class="create-post-form" [formGroup]="form" (ngSubmit)="submit()">
-    <h3>New Post</h3>
+<form class="create-post-form" [formGroup]="form" (ngSubmit)="submit()"
+    [class.create-post-form-collapsed]="!isExpanded()" (click)="expandForm()">
 
-    <div class="field">
-        <label for="title">Title</label>
-        <input id="title" type="text" formControlName="title"
-            [attr.aria-invalid]="form.get('title')?.invalid && form.get('title')?.touched" />
-        @if (form.get('title')?.touched && form.get('title')?.errors) {
-        <p class="field__error" role="alert">Title is required.</p>
+    <div class="create-post-form-trigger-header">
+        @if (!isExpanded()) {
+        <span class="prompt-text">Write a new post...</span>
+        } @else {
+        <h3>New Post</h3>
         }
     </div>
 
-    <div class="field">
-        <label for="body">Body</label>
-        <textarea id="body" rows="3" formControlName="body"
-            [attr.aria-invalid]="form.get('body')?.invalid && form.get('body')?.touched"></textarea>
-        @if (form.get('body')?.touched && form.get('body')?.errors) {
-        <p class="field__error" role="alert">Body is required.</p>
+    <div class="create-post-form-content">
+        @if (serverError()) {
+        <div class="error-banner" role="alert">
+            {{ serverError() }}
+        </div>
         }
+
+        <div class="field">
+            <label for="title">Title</label>
+            <input id="title" type="text" formControlName="title" [class.field-invalid]="isInvalid('title')"
+                [attr.aria-invalid]="isInvalid('title')" />
+            @if (errorMessage('title'); as msg) {
+            <span class="error-text" role="alert">{{ msg }}</span>
+            }
+        </div>
+
+        <div class="field">
+            <label for="body">Body</label>
+            <textarea id="body" rows="3" formControlName="body" [class.field-invalid]="isInvalid('body')"
+                [attr.aria-invalid]="isInvalid('body')"></textarea>
+            @if (errorMessage('body'); as msg) {
+            <span class="error-text" role="alert">{{ msg }}</span>
+            }
+        </div>
+
+
+        <div class="form-actions">
+            <button type="button" class="cancel-btn" (click)="collapseForm()">Cancel</button>
+            <button type="submit" class="submit-btn" [disabled]="submitting()">
+                @if (submitting()) {
+                <span class="spinner" aria-hidden="true"></span>
+                <span>Posting…</span>
+                } @else {
+                <span>Post</span>
+                }
+            </button>
+        </div>
     </div>
-
-    @if (serverError()) {
-    <p class="field__error" role="alert">{{ serverError() }}</p>
-    }
-
-    <button type="submit" [disabled]="submitting()">
-        {{ submitting() ? 'Posting…' : 'Post' }}
-    </button>
 </form>

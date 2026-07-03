@@ -70,16 +70,14 @@ Branch naming mirrors the phase, e.g. `feat/scaffold`, `feat/users-slice`,
 - [x] Verified: `git clone` → `docker-compose up` → working app
 
 ## Phase 9: Accessibility & responsive pass
-- [ ] Semantic landmarks, `aria-expanded` on collapse toggles
-- [ ] Keyboard-only run-through (tab through app, submit form via keyboard)
-- [ ] Color contrast check
-- [ ] Mobile / tablet / desktop breakpoints tested
-- [ ] Commit: "fix: accessibility and responsive improvements"
+- [x] Semantic landmarks, `aria-expanded` on collapse toggles
+- [x] Keyboard-only run-through (tab through app, submit form via keyboard)
+- [x] Color contrast check
+- [x] Mobile / tablet / desktop breakpoints tested
 
 ## Phase 10: Polish pass
-- [ ] Hover states, transitions, expand/collapse animation
-- [ ] Button loading spinners, empty-state copy/illustration
-- [ ] Commit: "style: micro-interactions and polish"
+- [x] Hover states, transitions, expand/collapse animation
+- [x] Button loading spinners, empty-state copy/illustration
 
 ## Phase 11: Deploy
 - [x] Backend deployed (Render): live URL working
@@ -88,11 +86,6 @@ Branch naming mirrors the phase, e.g. `feat/scaffold`, `feat/users-slice`,
 - [x] Commit (if config changes needed): "chore: deployment configuration"
 
 ## Phase 12: Documentation
-- [ ] Fill in `README.md`: setup instructions (tested on clean clone)
-- [ ] Add screenshots + live demo links to `README.md`
-- [ ] Final read-through of `ARCHITECTURE.md` for accuracy vs. final build
-- [ ] Commit: "docs: finalize README with setup, screenshots, and demo links"
-
-## Phase 13: Submit
-- [ ] Add `hr@finnettrust.com` as collaborator (if repo is private)
-- [ ] Send submission email (subject: `Full-Stack Assessment Submission`)
+- [x] Fill in `README.md`: setup instructions (tested on clean clone)
+- [x] Add screenshots + live demo links to `README.md`
+- [x] Final read-through of `ARCHITECTURE.md` for accuracy vs. final build

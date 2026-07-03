@@ -18,6 +18,7 @@ export class CreatePostFormComponent {
   readonly userId = input.required<string>();
   readonly postCreated = output<void>();
 
+  protected readonly isExpanded = signal(false);
   protected readonly submitting = signal(false);
   protected readonly serverError = signal<string | null>(null);
   protected readonly form;
@@ -30,6 +31,29 @@ export class CreatePostFormComponent {
       title: ['', Validators.required],
       body: ['', Validators.required],
     });
+  }
+
+  expandForm(): void {
+    this.isExpanded.set(true);
+  }
+
+  collapseForm(): void {console.log('Collapsing form');
+    this.form.reset();
+    this.isExpanded.set(false);
+    this.serverError.set(null);
+  }
+
+  isInvalid(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    return !!control && control.invalid && (control.touched || control.dirty);
+  }
+
+  errorMessage(controlName: string): string | null {
+    const control = this.form.get(controlName);
+    if (!control || !(control.touched || control.dirty)) return null;
+    if (control.errors?.['required']) return 'This field is required.';
+    if (control.errors?.['server']) return control.errors['server'];
+    return null;
   }
 
   submit(): void {
@@ -46,6 +70,7 @@ export class CreatePostFormComponent {
       next: () => {
         this.form.reset();
         this.submitting.set(false);
+        this.isExpanded.set(false);
         this.postCreated.emit();
       },
       error: (err: ValidationApiError) => {

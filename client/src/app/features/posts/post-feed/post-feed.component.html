@@ -1,29 +1,51 @@
 <section class="post-feed" aria-label="Posts">
     @if (postService.loading()) {
-    <ul class="post-feed__skeleton" aria-hidden="true">
+    <ul class="post-feed-skeleton" aria-hidden="true">
         @for (i of [1,2,3]; track i) {
-        <li class="skeleton-row skeleton-row--tall"></li>
+        <li class="skeleton-row skeleton-row-tall"></li>
         }
     </ul>
     } @else if (postService.error()) {
-    <div class="post-feed__error" role="alert">
+    <div class="post-feed-error" role="alert">
         <p>{{ postService.error() }}</p>
         <button type="button" (click)="retry()">Retry</button>
     </div>
     } @else if (postService.posts().length === 0) {
-    <p class="post-feed__empty">This user hasn't posted anything yet.</p>
+    <p class="post-feed-empty">This user hasn't posted anything yet.</p>
     } @else {
-    <ul class="post-feed__list">
+    <ul class="post-feed-list">
         @for (post of postService.posts(); track post.id) {
-        <li class="post-feed__item">
-            <button type="button" class="post-feed__toggle" [attr.aria-expanded]="isExpanded(post.id)"
-                (click)="toggleExpand(post.id)">
-                <h3>{{ post.title }}</h3>
-                <span class="post-feed__chevron" [class.post-feed__chevron--open]="isExpanded(post.id)">›</span>
-            </button>
-            <div class="post-feed__body" [class.post-feed__body--expanded]="isExpanded(post.id)">
-                <p>{{ post.body }}</p>
-            </div>
+        <li class="post-feed-item">
+            <article class="post-card">
+                <header class="post-header">
+                    <h3 class="post-title">{{ post.title }}</h3>
+                    <div class="post-meta">
+                        <span class="post-author">By <strong>{{ authorName() || 'System User' }}</strong></span>
+                        <span class="post-meta-divider">•</span>
+                        <span class="post-date">{{ post.createdAt ? formatDate(post.createdAt) : 'Just now' }}</span>
+                    </div>
+                </header>
+
+                <div class="post-body" [class.post-body-clamped]="isLongPost(post.body) && !isExpanded(post.id)"
+                    [class.post-body-expanded]="isLongPost(post.body) && isExpanded(post.id)">
+                    <div class="post-body-content">
+                        <p class="post-description">{{ post.body }}</p>
+                    </div>
+                </div>
+
+                @if (isLongPost(post.body)) {
+                <footer class="post-footer">
+                    <button type="button" class="post-toggle-link" [attr.aria-expanded]="isExpanded(post.id)"
+                        (click)="toggleExpand(post.id)">
+                        @if (isExpanded(post.id)) {
+                        <span>Show Less</span>
+                        } @else {
+                        <span>Read More</span>
+                        }
+                    </button>
+                </footer>
+                }
+            </article>
         </li>
         }
     </ul>

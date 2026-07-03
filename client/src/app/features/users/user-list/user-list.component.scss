@@ -1,14 +1,25 @@
 .user-list {
-    background: var(--color-bg);
+    background: #f8fafc;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    padding: 0.5rem;
+    padding: 0.75rem;
+    width: 100%;
 
-    @media (min-width: 768px) {
+    @media (min-width: 768px) and (max-width: 1023px) {
+
+        ul {
+            flex-direction: column;
+            overflow-x: visible;
+        }
+    }
+
+    @media (min-width: 1024px) {
         width: 260px;
         flex-shrink: 0;
         position: sticky;
-        top: 1rem;
+        top: 1.5rem;
+        max-height: calc(100vh - 3rem);
+        overflow-y: auto;
     }
 }
 
@@ -20,16 +31,19 @@
     gap: 0.5rem;
     overflow-x: auto;
 
-    @media (min-width: 768px) {
+    @media (min-width: 1024px) {
         flex-direction: column;
         overflow-x: visible;
     }
 }
 
-.user-list__item {
+.user-list-item {
     width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     text-align: left;
-    padding: 0.75rem 1rem;
+    padding: 0.6rem 0.75rem;
     border: none;
     background: transparent;
     border-radius: var(--radius-sm);
@@ -41,19 +55,49 @@
 
     &:hover {
         background: var(--color-surface);
+
+        .user-list-avatar-initials {
+            background: var(--color-border);
+        }
     }
 
-    &--active {
+    &-active {
         background: var(--color-navy);
         color: white;
+        font-weight: 500;
 
         &:hover {
             background: var(--color-navy);
         }
+
+        .user-list-avatar-initials {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
     }
 }
 
-.user-list__skeleton {
+.user-list-avatar-initials {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    background: var(--color-surface);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.user-list-name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.user-list-skeleton {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -77,7 +121,7 @@
     }
 }
 
-.user-list__error {
+.user-list-error {
     padding: 1rem;
     color: var(--color-error);
 
@@ -89,16 +133,10 @@
         color: var(--color-error);
         border-radius: var(--radius-sm);
         cursor: pointer;
-        transition: background var(--transition-fast);
-
-        &:hover {
-            background: var(--color-error);
-            color: white;
-        }
     }
 }
 
-.user-list__empty {
+.user-list-empty {
     padding: 1rem;
     color: var(--color-text-secondary);
 }

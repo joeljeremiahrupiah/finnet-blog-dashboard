@@ -2,16 +2,22 @@
 <section class="user-card" aria-labelledby="user-card-name">
     <h2 id="user-card-name">{{ u.name }}</h2>
     <dl>
-        <dt>Email</dt>
-        <dd><a [href]="'mailto:' + u.email">{{ u.email }}</a></dd>
+        <div class="user-card-field">
+            <dt>Email</dt>
+            <dd><a [href]="'mailto:' + u.email">{{ u.email }}</a></dd>
+        </div>
 
-        <dt>Company</dt>
-        <dd>{{ u.companyName }}</dd>
+        <div class="user-card-field">
+            <dt>Company</dt>
+            <dd>{{ u.companyName }}</dd>
+        </div>
 
-        <dt>Address</dt>
-        <dd>{{ u.addressStreet }}, {{ u.addressCity }}</dd>
+        <div class="user-card-field">
+            <dt>Address</dt>
+            <dd>{{ u.addressStreet }}, {{ u.addressCity }}</dd>
+        </div>
     </dl>
 </section>
 } @else {
-<p class="user-card__placeholder">Select a user to see their profile.</p>
+<p class="user-card-placeholder">Select a user to see their profile.</p>
 }

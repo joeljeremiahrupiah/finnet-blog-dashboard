@@ -9,10 +9,10 @@ import { PostService } from '../../../core/services/post.service';
 })
 export class PostFeedComponent {
   readonly userId = input<string | null>(null);
+  readonly authorName = input<string | null>(null);
   protected readonly expandedIds = signal<Set<string>>(new Set());
 
   constructor(protected readonly postService: PostService) {
-    // Refetch automatically whenever the selected user changes.
     effect(() => {
       const id = this.userId();
       if (id) {
@@ -32,6 +32,19 @@ export class PostFeedComponent {
 
   isExpanded(postId: string): boolean {
     return this.expandedIds().has(postId);
+  }
+
+  isLongPost(body: string | null | undefined): boolean {
+    if (!body) return false;
+    return body.length > 120;
+  }
+
+  formatDate(iso: string): string {
+    return new Date(iso).toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
   }
 
   retry(): void {

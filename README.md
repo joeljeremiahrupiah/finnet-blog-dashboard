@@ -50,14 +50,13 @@ finnet-blog-dashboard/
       dashboard/               Top-level page composing everything together
     Dockerfile
     nginx.conf
+  screenshots/                 Project screenshots
   docker-compose.yml           Full local stack: postgres + server + client
   ARCHITECTURE.md              Design decisions, DB design, scaling strategy
   API_CONTRACT.md              Exact API request/response shapes
   PROGRESS.md                  Build order and phase-by-phase checklist
   README.md
 ```
-
-_(Structure will be filled in as each part is built.)_
 
 ## Tech Stack
 
@@ -151,4 +150,45 @@ Full write-up in [`ARCHITECTURE.md`](./ARCHITECTURE.md). In short:
 
 ## Screenshots
 
-_(To be added.)_
+### Dashboard Overview
+
+Users, profile card, and posts feed together.
+![Full dashboard view](./screenshots/dashboard.png)
+
+### User Selection & Loading States
+
+Skeleton loaders shown while data is being fetched, and empty state messaging when a user has no posts yet.
+![User list skeleton loader and empty states](./screenshots/user-list-skeleton-loader.png)
+![Posts feed skeleton loader](./screenshots/posts-skeleton-loader.png)
+
+### Posts Feed: Read More / Show Less
+
+Each post shows the author and date, truncated to two lines by default, expandable via **Read More** and collapsible via **Show Less**.
+![Posts collapsed with Read More](./screenshots/retoggle-post.png)
+![Post expanded with Show Less](./screenshots/toggle-post.png)
+
+### Create Post: Empty State
+
+![Create post form, empty](./screenshots/create-form.png)
+
+### Create Post: Validation
+
+Inline validation on blur/submit, with red borders and a message per field.
+![Both fields showing validation errors](./screenshots/create-form-validation.png)
+![Single field validation error](./screenshots/create-form-live-validation.png)
+
+### Create Post: Filled and Submitting
+
+Form filled out, then the submit button showing a loading spinner while the request is in flight.
+![Create post form filled in, ready to submit](./screenshots/create-post-form.png)
+![Submit button showing loading spinner](./screenshots/posting-to-backend.png)
+
+### Create Post: Server Error Handling
+
+A user-friendly error banner is shown if the request fails (e.g. backend temporarily unreachable), with the form data preserved so nothing is lost.
+![Server error banner on failed submission](./screenshots/server-down.png)
+
+### Create Post: Success
+
+On success, the new post appears instantly at the top of the feed delivered via the live-update (SSE) stream, without a page refresh.
+![New post appearing at the top of the feed after creation](./screenshots/post-created.png)
