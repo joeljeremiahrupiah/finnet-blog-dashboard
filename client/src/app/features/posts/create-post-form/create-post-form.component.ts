@@ -37,7 +37,8 @@ export class CreatePostFormComponent {
     this.isExpanded.set(true);
   }
 
-  collapseForm(): void {console.log('Collapsing form');
+  collapseForm(event: Event): void {
+    event.stopPropagation();
     this.form.reset();
     this.isExpanded.set(false);
     this.serverError.set(null);

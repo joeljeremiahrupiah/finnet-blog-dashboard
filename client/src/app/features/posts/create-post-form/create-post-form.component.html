@@ -9,7 +9,7 @@
         }
     </div>
 
-    <div class="create-post-form-content">
+    <div class="create-post-form-content" (click)="$event.stopPropagation()">
         @if (serverError()) {
         <div class="error-banner" role="alert">
             {{ serverError() }}
@@ -36,7 +36,7 @@
 
 
         <div class="form-actions">
-            <button type="button" class="cancel-btn" (click)="collapseForm()">Cancel</button>
+            <button type="button" class="cancel-btn" (click)="collapseForm($event)">Cancel</button>
             <button type="submit" class="submit-btn" [disabled]="submitting()">
                 @if (submitting()) {
                 <span class="spinner" aria-hidden="true"></span>
